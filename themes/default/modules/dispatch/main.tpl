@@ -68,9 +68,14 @@
 
 	<!-- BEGIN: data -->
 	<table class="table table-striped table-bordered table-hover">
-		<caption>
-			{TABLE_CAPTION}
-		</caption>
+		<caption>{TABLE_CAPTION}</caption>
+		<colgroup>
+			<col class="w100" />
+			<col class="w100" />
+			<col class="w100" />
+			<col class="w100" />
+			<col span="4" class="w150" />
+		</colgroup>
 		<thead>
 			<tr>
 				<th> {LANG.dis_date_re} </th>
@@ -82,6 +87,13 @@
 		</thead>
 		<tbody>
 			<!-- BEGIN: row -->
+			<!-- BEGIN: type_title -->
+			<tr>
+			<th colspan="15" class="type_title">
+				{LANG.cat_parent}: {TYPE_TITLE}
+			</th>
+			</tr>
+		<!-- END: type_title -->			
 			<tr>
 				<td> {ROW.from_time} </td>
 				<td><a href="{ROW.link_code}">{ROW.code}</a></td>
@@ -94,10 +106,10 @@
 				</td>
 			</tr>
 			<!-- END: row -->
-		<tbody>
+		</tbody>
 			<!-- BEGIN: generate_page -->
 			<tr>
-				<td colspan="5"> {GENERATE_PAGE} </td>
+				<td colspan="15"> {GENERATE_PAGE} </td>
 			</tr>
 			<!-- END: generate_page -->
 	</table>

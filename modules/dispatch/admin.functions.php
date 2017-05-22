@@ -15,6 +15,7 @@ $submenu['cat'] = $lang_module['cat'];
 $submenu['type'] = $lang_module['type'];
 $submenu['signer'] = $lang_module['signer'];
 $submenu['departments'] = $lang_module['departments'];
+$submenu['excel'] = $lang_module['excel'];
 
 $allow_func = array(
     'main',
@@ -22,7 +23,8 @@ $allow_func = array(
     'cat',
     'add_document',
     'signer',
-    'type'
+    'type',
+    'excel'
 );
 global $arr_status;
 $arr_status = array(

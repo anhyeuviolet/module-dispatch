@@ -17,6 +17,7 @@ $fileupload = array();
 $array_data = array();
 
 if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array_op[1], $matches)) {
+
     $id = $matches[2];
     $alias = $matches[0];
     
@@ -31,10 +32,14 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
         Header("Location: " . nv_url_rewrite(NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name, 1));
         exit();
     }
-    
+	
     $row = $result->fetch();
-    
-    $row['cat'] = $listcats[$row['catid']]['title'];
+	if ( ! nv_user_in_groups($row['groups_view'])) {
+		Header("Location: " . nv_url_rewrite(NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name, 1));
+		exit();
+	}
+
+	$row['cat'] = $listcats[$row['catid']]['title'];
     $row['status'] = $arr_status[$row['status']]['name'];
     if ($row['from_time'] != 0) {
         $row['from_time'] = nv_date('d.m.Y', $row['from_time']);
@@ -83,6 +88,15 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
     $xtpl->assign('TYPELINK', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=main&type=" . $row['type']);
     $xtpl->assign('TYPENAME', $listtypes[$row['type']]['title']);
     $xtpl->parse('main.if_cat');
+	
+	$row['signer'] = '';
+	$sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_signer WHERE id=" . $row['from_signer'];
+	$re = $db->query($sql);
+	if ($re->rowCount()) {
+		while ($ro = $re->fetch()) {
+			$row['signer'] = $ro['name'];
+		}
+	}
     
     $xtpl->assign('ROW', $row);
     
@@ -123,6 +137,7 @@ if (isset($array_op[1]) and preg_match("/^([a-zA-Z0-9\-\_]+)\-([\d]+)$/", $array
         $xtpl->parse('main.de');
     }
     
+	
     $xtpl->parse('main');
     $contents = $xtpl->text('main');
     

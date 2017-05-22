@@ -54,6 +54,7 @@ $lang_module['dis_dis'] = 'Nội dung';
 $lang_module['dis_status'] = 'Trạng thái';
 $lang_module['dis_person'] = 'Người ký';
 $lang_module['dis_de'] = 'Phòng ban nhận';
+$lang_module['date_delivery'] = 'Ngày đến';
 
 $lang_module['dis_sta1'] = 'Chưa xử lý';
 $lang_module['dis_sta0'] = 'Đã xử lý';
@@ -88,3 +89,4 @@ $lang_module['type'] = ' Loại công văn ';
 $lang_module['type12'] = ' -- Chọn loại công văn -- ';
 $lang_module['list_se'] = 'Danh sách công văn tìm kiếm theo yêu cầu ';
 $lang_module['body'] = 'Nội dung công văn ';
+$lang_module['copy_count'] = 'Số bản nhận';

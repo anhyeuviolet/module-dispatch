@@ -13,7 +13,7 @@ if (!defined('NV_IS_FILE_ADMIN')) die('Stop!!!');
 $array['parentid'] = $catid = $array['type'] = $array['from_signer'] = $array['from_depid'] = 0;
 $arr_de['parentid'] = $array['statusid'] = $deid = $id = 0;
 $arr_imgs = $arr_img = $list_de = $lis = $listde = array();
-$array['from_time'] = $array['date_iss'] = $array['date_first'] = $array['date_die'] = $check = $to_person = $to_recipient = $error = '';
+$array['copy_count'] = $array['from_time'] = $array['date_iss'] = $array['date_delivery'] = $array['date_first'] = $array['date_die'] = $check = $to_person = $to_recipient = $error = '';
 $array['groups_view'] = 6;
 $id = $nv_Request->get_int('id', 'get', 0);
 
@@ -46,7 +46,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
     $gr = array();
     
     $_groups_view = $nv_Request->get_array('groups_view', 'post', array());
-    $array['groups_view'] = !empty($_groups_view) ? implode(',', nv_groups_post(array_intersect($_groups_view, array_keys($groups_list)))) : '';
+    $array['groups_view'] = !empty($_groups_view) ? implode(',', nv_groups_post(array_intersect($_groups_view, array_keys($groups_list)))) : '0';
     
     $array['parentid'] = $nv_Request->get_int('parentid', 'post', 0);
     $array['type'] = $nv_Request->get_int('typeid', 'post', 0);
@@ -56,6 +56,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
     $array['code'] = $nv_Request->get_string('code', 'post', '');
     $array['to_org'] = $nv_Request->get_string('to_org', 'post', '');
     $array['from_org'] = $nv_Request->get_string('from_org', 'post', '');
+    $array['copy_count'] = $nv_Request->get_string('copy_count', 'post', '');
     $array['from_signer'] = $nv_Request->get_int('from_signer', 'post', 0);
     $array['content'] = $nv_Request->get_string('content', 'post', '');
     $array['statusid'] = $nv_Request->get_int('statusid', 'post', 0);
@@ -84,6 +85,18 @@ if ($nv_Request->isset_request('submit', 'post')) {
         }
     } else {
         $array['date_iss'] = '';
+    }
+    $array['date_delivery'] = $nv_Request->get_title('date_delivery', 'post', '', 1);
+    
+    if (!empty($array['date_delivery'])) {
+        unset($m);
+        if (preg_match("/^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{4})$/", $array['date_delivery'], $m)) {
+            $array['date_delivery'] = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+        } else {
+            die($lang_module['in_result_errday']);
+        }
+    } else {
+        $array['date_delivery'] = '';
     }
     
     $array['date_first'] = $nv_Request->get_title('date_first', 'post', '', 1);
@@ -144,6 +157,8 @@ if ($nv_Request->isset_request('submit', 'post')) {
         
         } else if ($array['date_die'] != 0 && ($array['date_die'] < $array['date_first'])) {
             $error = $lang_module['error_die_first'];
+        } else if ($array['date_delivery'] < $array['from_time']) {
+            $error = $lang_module['error_date_delivery'];
         } else {
             if ($id != 0) {
                 $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_document SET
@@ -155,11 +170,13 @@ if ($nv_Request->isset_request('submit', 'post')) {
 					content= " . $db->quote($array['content']) . ",
 					file = " . $db->quote($array['file']) . ",
 					from_org = " . $db->quote($array['from_org']) . ",
+					copy_count = " . $db->quote($array['copy_count']) . ",
 					to_org = " . $db->quote($array['to_org']) . ",
 					from_depid = " . $array['from_depid'] . ",
 					from_signer = " . $array['from_signer'] . ",
 					from_time = " . $array['from_time'] . ",
 					date_iss = " . $array['date_iss'] . ",
+					date_delivery = " . $array['date_delivery'] . ",
 					date_first = " . $array['date_first'] . ",
 					date_die = " . $array['date_die'] . ",
 					groups_view = " . $array['groups_view'] . ",
@@ -199,10 +216,13 @@ if ($nv_Request->isset_request('submit', 'post')) {
 					" . $db->quote($array['code']) . ",
 					" . $db->quote($array['content']) . ",
 					" . $db->quote($array['file']) . ",
-					" . $db->quote($array['from_org']) . "," . $array['from_depid'] . ",
+					" . $db->quote($array['from_org']) . ",
+					" . $db->quote($array['copy_count']) . ",
+					" . $array['from_depid'] . ",
 					" . $array['from_signer'] . ",
 					" . $array['from_time'] . ",
 					" . $array['date_iss'] . ",
+					" . $array['date_delivery'] . ",
 					" . $array['date_first'] . ",
 					" . $array['date_die'] . ",
 					" . $db->quote($array['to_org']) . ",
@@ -258,8 +278,6 @@ $listdes = $listdes + nv_listdes($array['from_depid'], 0);
 
 $listsinger = nv_signerList($array['from_signer']);
 
-$array['date_die'] = $array['date_die'] ? nv_date('d/m/Y', $array['date_die']) : '';
-
 foreach ($listdes as $li) {
     if ($li['id'] != 0) {
         $lis[] = array(
@@ -300,6 +318,10 @@ if ($array['from_time'] != '') {
 
 if ($array['date_iss'] != '') {
     $array['date_iss'] = date("d.m.Y", $array['date_iss']);
+}
+
+if ($array['date_delivery'] != '') {
+    $array['date_delivery'] = date("d.m.Y", $array['date_delivery']);
 }
 
 if ($array['date_first'] != '') {

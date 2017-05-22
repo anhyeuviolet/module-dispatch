@@ -39,7 +39,12 @@
 				<td>{LANG.dis_date_re}(<span class="red">*</span>)</strong></td>
 				<td><input class="form-control w200 pull-left" value="{DATA.from_time}" type="text" id="from_time" name="from_time" readonly="readonly" /></td>
 			</tr>
-
+			
+			<tr>
+				<td>{LANG.date_delivery}</strong></td>
+				<td><input class="form-control w200 pull-left" value="{DATA.date_delivery}" type="text" id="date_delivery" name="date_delivery" readonly="readonly" /></td>
+			</tr>
+			
 			<tr>
 				<td>{LANG.dis_code}(<span class="red">*</span>)</strong></td>
 				<td><input class="form-control w400" value="{DATA.code}" name="code" id="code" maxlength="100" /></td>
@@ -49,6 +54,12 @@
 				<td>{LANG.dis_souce}(<span class="red">*</span>)</strong></td>
 				<td><input class="form-control w400" value="{DATA.from_org}" name="from_org" id="from_org" maxlength="100" /></td>
 			</tr>
+			
+			<tr>
+				<td>{LANG.copy_count}</strong></td>
+				<td><input class="form-control w400" value="{DATA.copy_count}" name="copy_count" id="copy_count" maxlength="100" /></td>
+			</tr>
+			
 			<tr>
 				<td >{LANG.dis_to_org}</td>
 				<td><textarea class="form-control w400" name="to_org">{DATA.to_org}</textarea><span class="help-block">{LANG.org}</span></td>
@@ -165,7 +176,7 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script type="text/javascript">
-	$("#from_time,#date_iss, #date_first, #date_die").datepicker({
+$("#from_time,#date_iss, #date_first, #date_die,#date_delivery").datepicker({
 		showOn : "both",
 		dateFormat : "dd.mm.yy",
 		changeMonth : true,

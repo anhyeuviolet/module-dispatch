@@ -143,7 +143,19 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
                         $xtpl->parse('main.data.row.loop1');
                     }
                 }
-                
+
+				if( ! empty( $row['dis_de'] ) ){
+					foreach( $row['dis_de'] as $dis_de){
+						$xtpl->assign('dis_de', $dis_de);
+						$xtpl->parse('main.data.row.depid.loop');
+					}
+					$xtpl->parse('main.data.row.depid');
+				}
+				if( ! empty( $row['type_title'] ) )
+				{
+					$xtpl->assign( 'TYPE_TITLE', $row['type_title']);
+					$xtpl->parse( 'main.data.row.type_title' );
+				}
                 $xtpl->parse('main.data.row');
                 $a++;
             

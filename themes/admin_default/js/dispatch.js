@@ -226,3 +226,11 @@ function nv_clear_text() {
 }
 
 //---------------------------------------
+
+function nv_dispatch_excel(){
+	var catid = $('#catid').val();
+	var type = $('#type').val();
+
+	window.location.href = script_name + '?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=excel&nocache=' + new Date().getTime() + '&export=1&type=' + type + '&catid=' + catid;
+	return false;
+}

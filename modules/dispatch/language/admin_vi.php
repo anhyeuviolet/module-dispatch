@@ -83,6 +83,7 @@ $lang_module['dis_dis'] = 'Nội dung';
 $lang_module['dis_status'] = 'Trạng thái';
 $lang_module['dis_person'] = 'Người ký';
 $lang_module['dis_de'] = 'Phòng ban nhận';
+$lang_module['date_delivery'] = 'Ngày nhận';
 $lang_module['dis_sta0'] = 'Chưa xử lý';
 $lang_module['dis_sta1'] = 'Đã xử lý';
 $lang_module['dis_sta2'] = 'Để lưu';
@@ -126,6 +127,7 @@ $lang_module['delete'] = 'Xóa';
 $lang_module['product_del_cofirm'] = 'Bạn thực sự muốn xóa? Nếu đồng ý, tất cả dữ liệu liên quan sẽ bị xóa. Bạn sẽ không thể phục hồi lại chúng sau này';
 $lang_module['error_iss_first'] = 'Ngày ban hành phải nhỏ hơn ngày có hiệu lực';
 $lang_module['error_iss_time'] = 'Ngày nhận phải nhỏ hơn hoặc bằng ngày ban hành';
+$lang_module['error_date_delivery'] = 'Ngày nhận chưa có hoặc nhỏ hơn ngày gửi';
 $lang_module['error_die_first'] = 'Ngày hết hạn phải lớn hơn ngày có hiệu lực';
 
 $lang_module['type'] = 'Loại công văn';
@@ -176,3 +178,5 @@ $lang_module['logChangeWeight'] = 'Thay đổi thứ tự sắp xếp';
 $lang_module['logDelsigner'] = 'Xóa người ký';
 
 $lang_module['in_result_errday'] = 'Lỗi định dạng ngày tháng';
+$lang_module['excel'] = 'Xuất ra Excel';
+$lang_module['copy_count'] = 'Số bản nhận';

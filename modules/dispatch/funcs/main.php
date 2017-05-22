@@ -19,7 +19,7 @@ $code = $content = '';
 $array = array();
 $error = '';
 $sql = "FROM " . NV_PREFIXLANG . "_" . $module_data . "_document WHERE id!=0";
-$base_url = NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name;
+$base_url = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name;
 
 $listcats = nv_listcats(0);
 $listdes = nv_listdes(0);
@@ -125,17 +125,17 @@ if (!$all_page) {
     $error = $lang_module['search_empty'];
 }
 
-$sql .= " ORDER BY from_time DESC";
+$sql .= " ORDER BY catid ASC, from_time ASC";
 
-$page = $nv_Request->get_int('page', 'get', 0);
-$per_page = 30;
-$sql2 = "SELECT * " . $sql . " LIMIT " . $page . ", " . $per_page;
+$page = $nv_Request->get_int('page', 'get', 1);
+$per_page = 3;
+$sql2 = "SELECT * " . $sql . " LIMIT " . (($page - 1) * $per_page) . ", " . $per_page;
 
 $query2 = $db->query($sql2);
 
 $array = array();
 $i = 0;
-
+$pre_letter = '';
 while ($row = $query2->fetch()) {
     $i = $i + 1;
     
@@ -151,27 +151,61 @@ while ($row = $query2->fetch()) {
             $row['to_org'] = str_replace(',', '<br />- ', $row['to_org']);
         
         }
-        
-        $array[$row['id']] = array(
+		
+		if($pre_letter !== $listcats[$row['catid']]['title']) 
+		{
+			$row['type_title'] = $listcats[$row['catid']]['title'];
+		} else {$row['type_title'] = '';}
+		$pre_letter = $listcats[$row['catid']]['title'];
+		
+		$row['dis_de'] = array();
+		$sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid=" . $row['id'];
+		$re = $db->query($sql);
+		if ($re->rowCount()) {
+			while ($ro = $re->fetch()) {
+				$listdes = nv_listdes($ro['deid']);
+				$row['dis_de'][] = $listdes[$ro['deid']]['title'];
+			}
+		}
+		$row['signer'] = '';
+		$sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_signer WHERE id=" . $row['from_signer'];
+		$re = $db->query($sql);
+		if ($re->rowCount()) {
+			while ($ro = $re->fetch()) {
+				$row['signer'] = $ro['name'];
+			}
+		}
+
+		$array[$row['id']] = array(
             'id' => (int) $row['id'],
             'stt' => $i,
             'title' => $row['title'],
             'code' => $row['code'],
             'from_org' => $row['from_org'],
+            'copy_count' => $row['copy_count'],
+            'signer' => $row['signer'],
             'to_org' => $row['to_org'],
             'cat' => $listcats[$row['catid']]['title'],
             'type' => $listtypes[$row['type']]['title'],
+            'type_title' => $row['type_title'],
+            'dis_de' => $row['dis_de'],
             'file' => $row['file'],
+            'view' => $row['view'],
             'content' => $row['content'],
             'link_type' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&amp;type=" . $row['type'],
             'link_cat' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&amp;type=" . $row['type'] . "&catid=" . $row['catid'],
             'from_times' => $row['from_time'],
             'from_time' => nv_date('d.m.Y', $row['from_time']),
+            'date_iss' => nv_date('d.m.Y', $row['date_iss']),
+            'date_delivery' => nv_date('d.m.Y', $row['date_delivery']),
+            'date_first' => nv_date('d.m.Y', $row['date_first']),
+            'date_die' => nv_date('d.m.Y', $row['date_die']),
             'status' => $arr_status[$row['status']]['name'],
             'link_code' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&amp;op=detail/" . $row['alias']
         );
     }
 }
+
 
 if (empty($array)) {
     $error = $lang_module['error_rows'];
